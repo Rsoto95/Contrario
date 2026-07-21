@@ -23,9 +23,11 @@ npm run report           # open the last report
 
 ## Run in CI (GitHub Actions)
 
-Workflow: `.github/workflows/qa-smoke.yml`. It installs + seeds the app, runs
-the suite, and uploads reports.
+The suite runs in GitHub Actions (`.github/workflows/qa-smoke.yml`): it installs
++ seeds the app, runs the tests, and **uploads the results to Cherry**, our test
+case management tool.
 
-- **Trigger:** Actions tab → **E2E Smoke** → **Run workflow** (or `gh workflow run "E2E Smoke" --ref main`). Also runs daily at 10:00 UTC. No push/PR trigger.
-- **Config (optional, for Cherry upload):** repo Settings → Secrets/Variables →
-  `CHERRY_API_KEY` (secret), `CHERRY_API_URL`, `CHERRY_PROJECT_SHORT_CODE` (variables).
+- **Trigger:** Actions tab → **E2E Smoke** → **Run workflow** (or `gh workflow run "E2E Smoke" --ref main`). Also runs daily at 10:00 UTC.
+- **Reports in Cherry:** https://tcmanagementfe-production.up.railway.app/automated-runs/CON
+
+  Login: `<redacted>` / `<redacted>` (temporary — you'll be prompted to change it on first sign-in).
