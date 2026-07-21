@@ -1,11 +1,16 @@
 import { test, expect } from '../fixtures/pages.fixture';
 
 /**
- * Placeholder spec so the suite runs out of the box — replace with real
- * tests for the app under test. Specs import { test, expect } from the
- * fixture (not from @playwright/test directly) so page objects are injected.
+ * Self-contained smoke test — no app, login, or env config required.
+ * It hits a public site to prove the whole setup works end to end
+ * (browser launch, navigation, assertions, reporters, CI upload).
+ *
+ * Delete this once you have real tests for the app under test.
  */
-test('home page loads', async ({ homePage }) => {
-  await homePage.open();
-  await expect(homePage.heading).toBeVisible();
+test('dummy: playwright.dev loads', async ({ page }) => {
+  await page.goto('https://playwright.dev/');
+  await expect(page).toHaveTitle(/Playwright/);
+  await expect(
+    page.getByRole('heading', { name: /Playwright enables reliable/i }),
+  ).toBeVisible();
 });
