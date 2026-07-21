@@ -1,17 +1,18 @@
 # Contrario — ATS Submit-Candidate Tests
 
-Playwright + TypeScript tests for the `submit-candidate` flow: API tests
-(`tests/api/`) and E2E UI tests (`tests/e2e/`).
+Playwright + TypeScript tests for the `submit-candidate` flow.
+
+- `qa-take-home-main/` — the app under test
+- `playwright/` — the tests: API (`tests/api/`) and E2E UI (`tests/e2e/`)
 
 ## Run locally
 
 ```bash
 # one-time: set up the app under test
-cd ../qa-take-home-main && npm run setup && cd ../playwright
+cd qa-take-home-main && npm run setup && cd ..
 
 # one-time: set up the tests
-npm install
-npx playwright install chromium
+cd playwright && npm install && npx playwright install chromium
 
 # run (Playwright auto-starts the app on :3000)
 npm test                 # everything
