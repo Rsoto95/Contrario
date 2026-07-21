@@ -1,5 +1,9 @@
 # Scheduled smoke test — runs the Playwright suite against the app under test.
 #
+# The app under test (qa-take-home-main) is booted by Playwright's webServer,
+# so CI installs + sets it up (Prisma schema + seed) before running the suite.
+# Auth is header-based (x-user-id) — no login credentials are needed.
+#
 # This workflow has no push/PR triggers — it runs daily on its schedule and
 # can be started manually from the Actions tab ("Run workflow"). Tests tagged
 # @flaky in their title are excluded — tag a test @flaky to quarantine it
@@ -7,11 +11,8 @@
 #
 # Configure these in the repo's Settings → Secrets and variables → Actions.
 #   Secrets:
-#     APP_USERNAME
-#     APP_PASSWORD
 #     CHERRY_API_KEY             (cherry_sk_...)
 #   Variables:
-#     BASE_URL                   app under test, e.g. https://app.example.com
 #     CHERRY_API_URL             e.g. https://cherry.example.com
 #     CHERRY_PROJECT_SHORT_CODE  e.g. CN
 
@@ -40,11 +41,20 @@ jobs:
           cache: npm
           cache-dependency-path: playwright/package-lock.json
 
-      - name: Install dependencies
+      - name: Install test dependencies
         run: npm ci
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+
+      # Set up the app under test (installs deps, generates the Prisma client,
+      # creates the SQLite schema, and seeds). Playwright's webServer then boots
+      # it with `npm start`; POST /test/reset re-seeds per test.
+      - name: Set up app under test
+        working-directory: qa-take-home-main
+        run: |
+          npm ci
+          npm run db:reset
 
       # Capture Playwright's exit code instead of failing here, so the JSON
       # report always gets produced and uploaded. The "Fail if tests failed"
@@ -54,8 +64,6 @@ jobs:
         env:
           CI: "true"
           BASE_URL: ${{ vars.BASE_URL }}
-          APP_USERNAME: ${{ secrets.APP_USERNAME }}
-          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
         run: |
           set +e
           npx playwright test --grep-invert "@flaky"

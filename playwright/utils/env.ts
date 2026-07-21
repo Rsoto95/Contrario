@@ -1,26 +1,18 @@
 /**
  * Typed access to environment variables (loaded from .env by playwright.config.ts).
- * Throws early with a clear message when a required variable is missing.
+ *
+ * The app under test uses header-based auth (x-user-id) selected per request, so
+ * there are no login credentials — `baseUrl` is the only value the suite needs,
+ * and it defaults to the local app. Cherry variables are read only by the CI
+ * upload script.
  */
-function required(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(
-      `Missing required environment variable: ${name}. Copy .env.example to .env and fill it in.`,
-    );
-  }
-  return value;
+function optional(name: string, fallback: string): string {
+  return process.env[name] || fallback;
 }
 
 export const env = {
+  /** Base URL of the app under test. Defaults to the local NestJS app. */
   get baseUrl(): string {
-    return required('BASE_URL');
-  },
-  /** Username/email for the account the suite signs in with. */
-  get username(): string {
-    return required('APP_USERNAME');
-  },
-  get password(): string {
-    return required('APP_PASSWORD');
+    return optional("BASE_URL", "http://localhost:3000");
   },
 };
