@@ -28,6 +28,4 @@ The suite runs in GitHub Actions (`.github/workflows/qa-smoke.yml`): it installs
 case management tool.
 
 - **Trigger:** Actions tab → **E2E Smoke** → **Run workflow** (or `gh workflow run "E2E Smoke" --ref main`). Also runs daily at 10:00 UTC.
-- **Reports in Cherry:** https://tcmanagementfe-production.up.railway.app/automated-runs/CON
-
-  Login: `<redacted>` / `<redacted>` (temporary — you'll be prompted to change it on first sign-in).
+- **Reports in Cherry:** https://tcmanagementfe-production.up.railway.app/automated-runs/CON (login credentials shared separately).
